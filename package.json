@@ -1,0 +1,13 @@
+{
+  "name": "indlay-admin",
+  "packageManager": "^npm@10.2.3",
+  "devDependencies": {
+    "turbo": "^2.2.3"
+  },
+  "scripts": {
+    "dev": "turbo run dev"
+  },
+  "workspaces": [
+    "apps/*"
+  ]
+}

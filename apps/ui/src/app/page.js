@@ -1,4 +1,3 @@
-import PropertyCard from "@/components/PropertyCard";
 import Image from "next/image";
 import Link from "next/link";
 

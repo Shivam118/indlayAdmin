@@ -1,7 +1,5 @@
 // models/Property.js
-
 const mongoose = require("mongoose");
-const Amenity = require("./AmenitiesModel");
 
 const PropertySchema = new mongoose.Schema({
   title: {
@@ -17,13 +15,8 @@ const PropertySchema = new mongoose.Schema({
   },
   price: {
     type: String,
-    required: true,
+    required: false,
     min: 0,
-  },
-  propertyType: {
-    type: String,
-    enum: ["apartment", "house", "villa", "condo", "studio"],
-    required: true,
   },
   location: {
     address: { type: String, required: true },
@@ -32,27 +25,9 @@ const PropertySchema = new mongoose.Schema({
     country: { type: String, required: true },
     postalCode: { type: String, required: true },
     coordinates: {
-      lat: { type: Number, required: true },
-      lng: { type: Number, required: true },
+      lat: { type: Number, required: false },
+      lng: { type: Number, required: false },
     },
-  },
-  size: {
-    type: String, // square feet or square meters
-    required: true,
-    min: 0,
-  },
-  bedrooms: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
-  bathrooms: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
-  yearBuilt: {
-    type: Number,
   },
   amenities: [
     {
@@ -61,26 +36,14 @@ const PropertySchema = new mongoose.Schema({
       required: true, // ensuring at least one amenity is attached
     },
   ],
-  generalInfo: {
-    listingType: {
-      type: String,
-      enum: ["sale", "rent"],
-      required: true,
-    },
-    status: {
-      type: String,
-      enum: ["available", "sold", "rented"],
-      default: "available",
-    },
-    contact: {
-      name: { type: String, required: true },
-      phone: { type: String, required: true },
-      email: { type: String, required: true },
-    },
-    postedDate: {
-      type: Date,
-      default: Date.now,
-    },
+  contact: {
+    name: { type: String, required: true },
+    phone: { type: String, required: true },
+    email: { type: String, required: true },
+  },
+  postedDate: {
+    type: Date,
+    default: Date.now,
   },
   mainImage: {
     type: String,
@@ -96,6 +59,9 @@ const PropertySchema = new mongoose.Schema({
     type: String,
     ref: "User",
     required: true,
+  },
+  extras: {
+    type: Map,
   },
   isReadyToPublish: {
     type: Boolean,

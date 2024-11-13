@@ -44,6 +44,10 @@ const ServicesSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  isReadyToPublish: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model("Service", ServicesSchema);

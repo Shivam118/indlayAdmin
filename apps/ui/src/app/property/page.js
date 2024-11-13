@@ -12,11 +12,11 @@ export default function Page() {
         <Image src="/images/logo.png" width={118} height={48} alt={"Indlay"} />
       </div>
       <h1 className="font-youth font-medium text-[32px] text-center mb-10">
-        Welcome back,
+        Listed Properties
       </h1>
       <div className="flex items-center justify-between flex-wrap gap-5">
         <Link
-          href="/property/add"
+          href="/property/addOrUpdate"
           className="min-w-[300px] min-h-[300px] h-full border border-borderIndlay rounded-[20px] text-4xl flex items-center justify-center shadow-md"
         >
           <CgAdd />

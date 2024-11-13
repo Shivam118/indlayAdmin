@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { LuPhoneCall } from "react-icons/lu";
 import { IoMdAdd } from "react-icons/io";

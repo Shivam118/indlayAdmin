@@ -12,9 +12,8 @@ const AmenitySchema = new mongoose.Schema({
     required: true,
   },
   icon: {
-    // Optionally store an icon or image reference for the amenity
-    type: String,
-    required: false,
+    type: { url: String, alt: String },
+    required: true,
   },
 });
 

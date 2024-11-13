@@ -4,6 +4,7 @@ const cors = require("cors");
 const userController = require("./controllers/UserController");
 const propertyController = require("./controllers/PropertyController");
 const amenityController = require("./controllers/AmenityController");
+const schemaController = require("./controllers/SchemaController");
 const { verifyToken, isAdmin } = require("./middleware/auth");
 const { PORT } = require("./utils/env");
 const dotenv = require("dotenv");
@@ -30,6 +31,11 @@ app.post(
   isAdmin,
   amenityController.createAmenity
 ); // Add Amenity
+
+// Schema Routes
+app.post("/api/schema", verifyToken, schemaController.createSchema); // Add Schema
+app.put("/api/schema", verifyToken, schemaController.updateSchema); // Update Schema
+app.get("/api/schema", verifyToken, schemaController.getSchema); // Get Schema
 
 // app.post("/api/property/login", propertyController.loginUser);
 // app.get(

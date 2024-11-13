@@ -247,9 +247,130 @@ const validateProperty = (data) => {
   return { isValid: Object.keys(errors).length === 0, errors };
 };
 
+// Validation for Service data
+const validateService = (data) => {
+  const errors = {};
+
+  // Validate name
+  if (!data.name || typeof data.name !== "string" || data.name.trim() === "") {
+    errors.name = "Name is required and must be a non-empty string.";
+  }
+
+  // Validate description
+  if (
+    !data.description ||
+    typeof data.description !== "string" ||
+    data.description.trim() === ""
+  ) {
+    errors.description =
+      "Description is required and must be a non-empty string.";
+  }
+
+  // Validate price
+  if (
+    data.price !== undefined &&
+    (typeof data.price !== "number" || data.price < 0)
+  ) {
+    errors.price = "Price must be a positive number if provided.";
+  }
+
+  // Validate generalInfo
+  if (!data.generalInfo || typeof data.generalInfo !== "object") {
+    errors.generalInfo =
+      "General information is required and must be an object.";
+  } else {
+    const listingTypes = ["sale", "rent"];
+    const statuses = ["available", "sold", "rented"];
+
+    if (
+      !data.generalInfo.listingType ||
+      !listingTypes.includes(data.generalInfo.listingType)
+    ) {
+      errors.listingType = `Listing type must be one of: ${listingTypes.join(
+        ", "
+      )}.`;
+    }
+
+    if (
+      !data.generalInfo.status ||
+      !statuses.includes(data.generalInfo.status)
+    ) {
+      errors.status = `Status must be one of: ${statuses.join(", ")}.`;
+    }
+
+    if (
+      !data.generalInfo.contact ||
+      typeof data.generalInfo.contact !== "object"
+    ) {
+      errors.contact = "Contact information is required and must be an object.";
+    } else {
+      if (
+        !data.generalInfo.contact.name ||
+        typeof data.generalInfo.contact.name !== "string"
+      ) {
+        errors.contactName = "Contact name is required and must be a string.";
+      }
+      if (
+        !data.generalInfo.contact.phone ||
+        typeof data.generalInfo.contact.phone !== "string"
+      ) {
+        errors.contactPhone = "Contact phone is required and must be a string.";
+      }
+      if (
+        !data.generalInfo.contact.email ||
+        typeof data.generalInfo.contact.email !== "string"
+      ) {
+        errors.contactEmail = "Contact email is required and must be a string.";
+      }
+    }
+  }
+
+  // Validate listedBy
+  if (!data.listedBy || typeof data.listedBy !== "string") {
+    errors.listedBy = "ListedBy must be a valid user email.";
+  }
+
+  return { isValid: Object.keys(errors).length === 0, errors };
+};
+
+// Validate for Schema's
+const validateSchemaData = (data) => {
+  const errors = {};
+
+  // Validate name
+  if (
+    !data.name ||
+    typeof data.name !== "string" ||
+    data.name.trim().length === 0
+  ) {
+    errors.name = "Name is required and must be a non-empty string.";
+  }
+
+  // Validate schema (must be a Map with specific field structure)
+  if (!data.schema || !(data.schema instanceof Map) || data.schema.size === 0) {
+    errors.schema = "Schema is required and must be a non-empty Map.";
+  } else {
+    // Additional schema field validation if needed
+    data.schema.forEach((value, key) => {
+      if (typeof key !== "string" || key.trim() === "") {
+        errors[`schema.${key}`] =
+          "All keys in schema must be non-empty strings.";
+      }
+      if (typeof value === "undefined") {
+        errors[`schema.${key}`] =
+          "All fields in schema must have a defined value.";
+      }
+    });
+  }
+
+  return errors;
+};
+
 module.exports = {
+  validateService,
   validateAmenity,
   validateProperty,
   validateRegisterInput,
   validateLoginInput,
+  validateSchemaData,
 };

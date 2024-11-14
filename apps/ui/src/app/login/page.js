@@ -52,7 +52,7 @@ export default function Page() {
         return;
       }
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/user/login`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/login`,
         {
           email: email?.toLowerCase(),
           password,
@@ -71,14 +71,6 @@ export default function Page() {
   return (
     <div className="bg-bgIndlay w-full min-h-screen grid grid-cols-2 px-10 py-5">
       <div className="col-span-1">
-        <div className="h-[100px] w-full">
-          <Image
-            src="/images/logo.png"
-            width={118}
-            height={48}
-            alt={"Indlay"}
-          />
-        </div>
         <div className="flex flex-col items-center justify-center">
           <h2 className="font-youth font-medium text-[32px] text-center">
             Welcome back

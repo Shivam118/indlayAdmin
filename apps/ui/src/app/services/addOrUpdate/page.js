@@ -123,7 +123,7 @@ export default function AddProperty() {
     console.log(formData);
     return;
     try {
-      const response = await fetch("/api/properties", {
+      const response = await fetch("/properties", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

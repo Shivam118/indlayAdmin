@@ -1,85 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { MdAlternateEmail } from "react-icons/md";
 import axios from "axios";
 import { API_URL } from "@/utils";
-
-const inputStyle =
-  "text-sm bg-transparent w-full focus:outline-none text-[#000]";
-const labelStyle =
-  "font-medium text-sm text-black w-full text-left leading-[18px] pb-[18px]";
-const inputGroupStyle =
-  "rounded-[50px] p-4 h-[52px] border border-borderIndlay flex flex-row items-between justify-center gap-5 bg-white w-full";
-
-const InputField = ({
-  label,
-  name,
-  type = "text",
-  value,
-  error,
-  handleChange,
-  formData,
-  colSpan = 1,
-  icon = <MdAlternateEmail />,
-}) => {
-  return (
-    <div
-      className={`flex flex-col items-center justify-center w-full col-span-${colSpan}`}
-    >
-      <label htmlFor={name} className={labelStyle}>
-        {label}:
-      </label>
-      <div className={inputGroupStyle}>
-        <span className="text-indlay">{icon}</span>
-        <input
-          type={type}
-          name={name}
-          id={name}
-          value={value ? value : formData[name]}
-          onChange={handleChange}
-          className={inputStyle}
-        />
-        {error[name] && <span>{error[name]}</span>}
-      </div>
-    </div>
-  );
-};
-
-const SelectField = ({
-  label,
-  name,
-  type = "text",
-  error,
-  handleChange,
-  formData,
-  options,
-}) => {
-  return (
-    <div
-      className={`flex flex-col items-center justify-center w-full col-span-1`}
-    >
-      <label htmlFor={name} className={labelStyle}>
-        {label}:
-      </label>
-      <div className={inputGroupStyle}>
-        <select
-          id={name}
-          name={name}
-          value={formData[name]}
-          onChange={handleChange}
-          className={inputStyle}
-        >
-          {options.map((val, index) => (
-            <option value={val} key={index} className="capitalize">
-              {val}
-            </option>
-          ))}
-        </select>
-        {error[name] && <span>{error[name]}</span>}
-      </div>
-    </div>
-  );
-};
+import InputField from "@/components/InputField";
+import SelectField from "@/components/SelectField";
 
 export default function AddProperty() {
   const [formData, setFormData] = useState({
@@ -165,7 +89,7 @@ export default function AddProperty() {
     console.log(formData);
     return;
     try {
-      const response = await fetch("/api/properties", {
+      const response = await fetch("/properties", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

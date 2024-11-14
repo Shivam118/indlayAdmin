@@ -4,9 +4,6 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div className="bg-bgIndlay w-full min-h-screen px-10 py-5">
-      <div className="h-[100px] w-full">
-        <Image src="/images/logo.png" width={118} height={48} alt={"Indlay"} />
-      </div>
       <div className="flex items-center justify-center h-full">
         <div className="grid grid-cols-4 gap-7 w-[800px]">
           <Link
@@ -14,6 +11,18 @@ export default function Home() {
             className="col-span-2 row-span-2 w-full min-w-[200px] h-full min-h-[200px] bg-gradient-to-br from-[#E6E6FA] to-[#FADADD] rounded-[30px] text-2xl flex items-center justify-center"
           >
             Properties
+          </Link>
+          <Link
+            href="/schema/property"
+            className="col-span-1 row-span-1 w-full min-w-[200px] h-full min-h-[200px] bg-gradient-to-br from-[#E6E6FA] to-[#FADADD] rounded-[30px] text-2xl flex items-center justify-center"
+          >
+            Property Schema
+          </Link>
+          <Link
+            href="/schema/services"
+            className="col-span-1 row-span-1 w-full min-w-[200px] h-full min-h-[200px] bg-gradient-to-br from-[#E6E6FA] to-[#FADADD] rounded-[30px] text-2xl flex items-center justify-center"
+          >
+            Services Schema
           </Link>
           <Link
             href="/services"

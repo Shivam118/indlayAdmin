@@ -4,6 +4,7 @@ import { AuthProvider } from "../context/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "../components/ProtectedRoute";
+import Image from "next/image";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -38,7 +39,18 @@ export default function RootLayout({ children }) {
           pauseOnFocusLoss
           pauseOnHover
         />
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <div className="h-[100px] bg-bgIndlay w-full px-10 py-4 flex items-center justify-between">
+            <Image
+              src="/images/logo.png"
+              width={118}
+              height={48}
+              alt={"Indlay"}
+            />
+            {/* <div>{localStorage.getItem("token") && "USER"}</div> */}
+          </div>
+          {children}
+        </AuthProvider>
         {/* </ProtectedRoute> */}
       </body>
     </html>

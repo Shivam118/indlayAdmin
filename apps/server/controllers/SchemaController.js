@@ -26,7 +26,6 @@ const createSchema = async (req, res) => {
 };
 
 const updateSchema = async (req, res) => {
-  const { id } = req.params; // Schema document ID
   const { name, schema } = req.body;
 
   // Convert schema object to Map if sent as plain object
@@ -38,10 +37,12 @@ const updateSchema = async (req, res) => {
   }
 
   try {
+    const schemaPlainObject = Object.fromEntries(schemaMap);
+
     // Find the schema by ID and update it
-    const updatedSchema = await Schemas.findByIdAndUpdate(
-      id,
-      { name: name.trim(), schema: schemaMap },
+    const updatedSchema = await Schemas.findOneAndUpdate(
+      { name: name.trim() }, // Filter criteria
+      { $set: { extras: schemaPlainObject } }, // Update operation
       { new: true } // Return the updated document
     );
 

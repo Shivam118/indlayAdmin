@@ -8,9 +8,6 @@ import { CgAdd } from "react-icons/cg";
 export default function Page() {
   return (
     <div className="bg-bgIndlay w-full min-h-screen px-10 py-5">
-      <div className="h-[100px] w-full">
-        <Image src="/images/logo.png" width={118} height={48} alt={"Indlay"} />
-      </div>
       <h1 className="font-youth font-medium text-[32px] text-center mb-10">
         Listed Properties
       </h1>

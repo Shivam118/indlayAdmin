@@ -10,8 +10,9 @@ exports.createAmenity = async (req, res) => {
     if (!isValid) {
       return res.status(400).json({ errors });
     }
-    const { name, description, icon } = req.body;
-    const amenity = new Amenity({ name, description, icon });
+    const { name, description, iconUrl } = req.body;
+
+    const amenity = new Amenity({ name, description, icon: iconUrl });
     await amenity.save();
     res.status(201).json({ message: "Amenity created successfully", amenity });
   } catch (error) {
@@ -24,10 +25,6 @@ exports.createAmenity = async (req, res) => {
 // Get all amenities
 exports.getAllAmenities = async (req, res) => {
   try {
-    const { isValid, errors } = validateAmenity(req.body);
-    if (!isValid) {
-      return res.status(400).json({ errors });
-    }
     const amenities = await Amenity.find();
     res.status(200).json(amenities);
   } catch (error) {
@@ -61,10 +58,10 @@ exports.updateAmenity = async (req, res) => {
     if (!isValid) {
       return res.status(400).json({ errors });
     }
-    const { name, description, icon } = req.body;
+    const { id, name, description, iconUrl } = req.body;
     const amenity = await Amenity.findByIdAndUpdate(
-      req.params.id,
-      { name, description, icon },
+      id,
+      { name, description, icon: iconUrl },
       { new: true }
     );
     if (!amenity) return res.status(404).json({ error: "Amenity not found" });

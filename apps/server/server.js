@@ -31,6 +31,13 @@ app.post(
   isAdmin,
   amenityController.createAmenity
 ); // Add Amenity
+app.get("/api/amenities/all", amenityController.getAllAmenities); // Get all amenities
+app.put(
+  "/api/amenity/update",
+  verifyToken,
+  isAdmin,
+  amenityController.updateAmenity
+); // Update Amenity
 
 // Schema Routes
 app.post("/api/schema", verifyToken, schemaController.createSchema); // Add Schema

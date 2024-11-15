@@ -7,12 +7,12 @@ const AmenitySchema = new mongoose.Schema({
     unique: true, // Ensuring amenities are unique
     trim: true,
   },
-  description: {
+  icon: {
     type: String,
     required: true,
   },
-  icon: {
-    type: { url: String, alt: String },
+  description: {
+    type: String,
     required: true,
   },
 });

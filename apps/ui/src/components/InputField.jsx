@@ -1,7 +1,7 @@
 import { MdAlternateEmail } from "react-icons/md";
 
 const inputStyle =
-  "text-sm bg-transparent w-full focus:outline-none text-[#000] capitalize";
+  "text-sm bg-transparent w-full focus:outline-none text-[#000]";
 const labelStyle =
   "font-medium text-sm text-black w-full text-left leading-[18px] pb-[18px] capitalize";
 const inputGroupStyle =

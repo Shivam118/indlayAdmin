@@ -1,7 +1,22 @@
+"use client";
+import { jwtDecode } from "jwt-decode";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [token] = useState(localStorage.getItem("token"));
+  const [role, setRole] = useState(null);
+
+  if (!token) {
+    window.location.href = "/login";
+  }
+
+  useEffect(() => {
+    const decoded = jwtDecode(token);
+    setRole(decoded.role);
+  }, [token]);
+
   return (
     <div className="bg-bgIndlay w-full min-h-screen px-10 py-5">
       <div className="flex items-center justify-center h-full">
@@ -19,10 +34,10 @@ export default function Home() {
             Property Schema
           </Link>
           <Link
-            href="/schema/services"
+            href="/schema/service"
             className="col-span-1 row-span-1 w-full min-w-[200px] h-full min-h-[200px] bg-gradient-to-br from-[#E6E6FA] to-[#FADADD] rounded-[30px] text-2xl flex items-center justify-center"
           >
-            Services Schema
+            Service Schema
           </Link>
           <Link
             href="/services"
@@ -31,23 +46,27 @@ export default function Home() {
             Services
           </Link>
           <Link
-            href="/info"
-            className="col-span-1 w-full min-w-[200px] h-full min-h-[200px] bg-gradient-to-br from-[#FFE5D9] to-[#FFB6C1] rounded-[30px] text-2xl flex items-center justify-center"
-          >
-            General Info
-          </Link>
-          <Link
             href="/amenities"
             className="col-span-1 w-full min-w-[200px] h-full min-h-[200px] bg-gradient-to-br from-[#F7DAD9] to-[#DCC5E1] rounded-[30px] text-2xl flex items-center justify-center"
           >
             Amenities
           </Link>
-          <Link
-            href="/users"
-            className="col-span-1 w-full min-w-[200px] h-full min-h-[200px] bg-gradient-to-br from-[#FFF8E1] to-[#E8D3C5] rounded-[30px] text-2xl flex items-center justify-center"
-          >
-            Users
-          </Link>
+          {role === "admin" && (
+            <>
+              <Link
+                href="/requests"
+                className="col-span-1 w-full min-w-[200px] h-full min-h-[200px] bg-gradient-to-br from-[#F7DAD9] to-[#DCC5E1] rounded-[30px] text-2xl flex items-center justify-center"
+              >
+                Pending Requests
+              </Link>
+              <Link
+                href="/users"
+                className="col-span-1 w-full min-w-[200px] h-full min-h-[200px] bg-gradient-to-br from-[#FFF8E1] to-[#E8D3C5] rounded-[30px] text-2xl flex items-center justify-center"
+              >
+                Users
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </div>

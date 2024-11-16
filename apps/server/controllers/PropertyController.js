@@ -15,22 +15,14 @@ exports.createProperty = async (req, res) => {
     const user = req.user;
     const {
       title,
-      description,
-      price,
-      propertyType,
-      location,
-      size,
-      bedrooms,
-      bathrooms,
-      yearBuilt,
-      amenities,
-      generalInfo,
+      slug,
+      details,
       mainImage,
       images,
-      listedBy,
       isReadyToPublish = user?.role === "admin",
     } = req.body;
 
+    const {amenities, ...rest} = details;
     // Check if all provided amenities exist
     const amenityRecords = await Amenity.find({ _id: { $in: amenities } });
     if (amenityRecords.length !== amenities.length) {
@@ -41,19 +33,11 @@ exports.createProperty = async (req, res) => {
 
     const property = new Property({
       title,
-      description,
-      price,
-      propertyType,
-      location,
-      size,
-      bedrooms,
-      bathrooms,
-      yearBuilt,
+      slug,
+      details: rest,
       amenities,
-      generalInfo,
       mainImage,
       images,
-      listedBy,
       isReadyToPublish,
     });
 
@@ -71,13 +55,8 @@ exports.createProperty = async (req, res) => {
 // Get all properties
 exports.getAllProperties = async (req, res) => {
   try {
-    const { isValid, errors } = validateProperty(req.body);
-    if (!isValid) {
-      return res.status(400).json({ errors });
-    }
-    const properties = await Property.find()
+    const properties = await Property.find({ isReadyToPublish: true })
       .populate("amenities")
-      .populate("listedBy", "name email");
     res.status(200).json(properties);
   } catch (error) {
     res
@@ -93,9 +72,8 @@ exports.getPropertyById = async (req, res) => {
     if (!isValid) {
       return res.status(400).json({ errors });
     }
-    const property = await Property.findById(req.params.id)
+    const property = await Property.findOne({ slug: req.params.slug})
       .populate("amenities")
-      .populate("listedBy", "name email");
     if (!property) return res.status(404).json({ error: "Property not found" });
     res.status(200).json(property);
   } catch (error) {
@@ -112,21 +90,18 @@ exports.updateProperty = async (req, res) => {
     if (!isValid) {
       return res.status(400).json({ errors });
     }
+    const user = req.user;
     const {
+      id,
       title,
-      description,
-      price,
-      propertyType,
-      location,
-      size,
-      bedrooms,
-      bathrooms,
-      yearBuilt,
-      amenities,
-      generalInfo,
+      slug,
+      details,
+      mainImage,
       images,
-      isReadyForPublish,
+      isReadyToPublish = user?.role === "admin",
     } = req.body;
+
+    const {amenities, ...rest} = details;
 
     // Validate amenities if provided
     if (amenities) {
@@ -139,21 +114,14 @@ exports.updateProperty = async (req, res) => {
     }
 
     const property = await Property.findByIdAndUpdate(
-      req.params.id,
+      id,
       {
         title,
-        description,
-        price,
-        propertyType,
-        location,
-        size,
-        bedrooms,
-        bathrooms,
-        yearBuilt,
-        amenities,
-        generalInfo,
+        slug,
+        details: rest,
+        mainImage,
         images,
-        isReadyForPublish,
+        isReadyToPublish,
       },
       { new: true }
     );
@@ -172,10 +140,6 @@ exports.updateProperty = async (req, res) => {
 // Delete a property
 exports.deleteProperty = async (req, res) => {
   try {
-    const { isValid, errors } = validateProperty(req.body);
-    if (!isValid) {
-      return res.status(400).json({ errors });
-    }
     const property = await Property.findByIdAndDelete(req.params.id);
     if (!property) return res.status(404).json({ error: "Property not found" });
     res.status(200).json({ message: "Property deleted successfully" });
@@ -183,5 +147,34 @@ exports.deleteProperty = async (req, res) => {
     res
       .status(500)
       .json({ error: "Error deleting property", details: error.message });
+  }
+};
+
+exports.getNonPublishedProperties = async (req, res) => {
+  try {
+    const properties = await Property.find({ isReadyToPublish: false });
+    res.status(200).json(properties);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Error fetching properties", details: error.message });
+  }
+};
+
+exports.publishProperty = async (req, res) => {
+  try {
+    const property = await Property.findByIdAndUpdate(
+      req.params.id,
+      { isReadyToPublish: true },
+      { new: true }
+    );
+    if (!property) return res.status(404).json({ error: "Property not found" });
+    res
+      .status(200)
+      .json({ message: "Property published successfully", property });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Error publishing property", details: error.message });
   }
 };

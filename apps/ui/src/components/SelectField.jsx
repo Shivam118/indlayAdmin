@@ -35,7 +35,7 @@ export default function SelectField({
             </option>
           ))}
         </select>
-        {error[name] && <span>{error[name]}</span>}
+        {error && error[name] && <span>{error[name]}</span>}
       </div>
     </div>
   );

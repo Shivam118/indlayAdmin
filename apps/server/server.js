@@ -4,6 +4,7 @@ const cors = require("cors");
 const userController = require("./controllers/UserController");
 const propertyController = require("./controllers/PropertyController");
 const amenityController = require("./controllers/AmenityController");
+const serviceController = require("./controllers/ServicesController");
 const schemaController = require("./controllers/SchemaController");
 const { verifyToken, isAdmin } = require("./middleware/auth");
 const { PORT } = require("./utils/env");
@@ -22,7 +23,19 @@ app.post("/api/user/login", userController.loginUser); // Login User
 app.get("/api/user/users", verifyToken, isAdmin, userController.getAllUsers); // Only admins can access
 
 // Property routes
-app.post("/api/property/add", verifyToken, propertyController.createProperty); // Add Property
+app.post("/api/property/add", verifyToken, propertyController.createProperty);
+app.put("/api/property/update", verifyToken, propertyController.updateProperty);
+app.get("/api/properties", verifyToken, propertyController.getAllProperties);
+app.get("/api/property/nonPublished", verifyToken, propertyController.getNonPublishedProperties);
+app.put("/api/property/publish", verifyToken, propertyController.publishProperty); 
+
+
+// Service routes
+app.post("/api/service/add", verifyToken, serviceController.createService);
+app.put("/api/service/update", verifyToken, serviceController.updateService);
+app.get("/api/services", verifyToken, serviceController.getAllServices);
+app.get("/api/service/nonPublished", verifyToken, serviceController.getNonPublishedServices);
+app.put("/api/service/publish", verifyToken, serviceController.publishService);
 
 // Amenity routes
 app.post(

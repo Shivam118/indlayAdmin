@@ -1,28 +1,30 @@
 // controllers/serviceController.js
 
-const Service = require("../models/Service");
+const Service = require("../models/ServicesModel");
 const { validateService } = require("../utils/validation");
 
 // Create a new service
 exports.createService = async (req, res) => {
-  const { name, description, image, price, generalInfo, listedBy } = req.body;
+  const user = req.user;
+  const {
+    title,
+    details,
+    slug,
+    mainImage,
+    images,
+    isReadyToPublish = user?.role === "admin",
+  } = req.body;
 
   // Validate input data
-  const { isValid, errors } = validateService(req.body);
-  if (!isValid) {
-    return res
-      .status(400)
-      .json({ error: "Validation failed", details: errors });
-  }
 
   try {
     const service = new Service({
-      name,
-      description,
-      image,
-      price,
-      generalInfo,
-      listedBy,
+      title,
+      details,
+      slug,
+      mainImage,
+      images,
+      isReadyToPublish,
     });
 
     // Save the new service
@@ -39,10 +41,10 @@ exports.createService = async (req, res) => {
 
 // Get a service by ID
 exports.getServiceById = async (req, res) => {
-  const { id } = req.params;
+  const { slug } = req.params;
 
   try {
-    const service = await Service.findById(id).populate("listedBy", "email");
+    const service = await Service.findOne({ slug });
     if (!service) {
       return res.status(404).json({ error: "Service not found" });
     }
@@ -57,7 +59,7 @@ exports.getServiceById = async (req, res) => {
 // Get all services
 exports.getAllServices = async (req, res) => {
   try {
-    const services = await Service.find().populate("listedBy", "email");
+    const services = await Service.find({ isReadyToPublish: true });
     res.json(services);
   } catch (error) {
     res
@@ -68,20 +70,22 @@ exports.getAllServices = async (req, res) => {
 
 // Update a service
 exports.updateService = async (req, res) => {
-  const { id } = req.params;
-
-  // Validate input data
-  const { isValid, errors } = validateService(req.body);
-  if (!isValid) {
-    return res
-      .status(400)
-      .json({ error: "Validation failed", details: errors });
-  }
+  const { id, title, details, slug, mainImage, images, isReadyToPublish } =
+    req.body;
 
   try {
-    const updatedService = await Service.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
+    const updatedService = await Service.findByIdAndUpdate(
+      id,
+      {
+        title,
+        details,
+        slug,
+        mainImage,
+        images,
+        isReadyToPublish,
+      },
+      { new: true }
+    );
     if (!updatedService) {
       return res.status(404).json({ error: "Service not found" });
     }
@@ -112,3 +116,34 @@ exports.deleteService = async (req, res) => {
       .json({ error: "Error deleting service", details: error.message });
   }
 };
+
+exports.getNonPublishedServices = async (req, res) => {
+  try {
+    const services = await Service.find({ isReadyToPublish: false });
+    res.json(services);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Error fetching services", details: error.message });
+  }
+};
+
+exports.publishService = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const service = await Service.findByIdAndUpdate(
+      id,
+      { isReadyToPublish: true },
+      { new: true }
+    );
+    if (!service) {
+      return res.status(404).json({ error: "Service not found" });
+    }
+    res.json({ message: "Service published successfully", service });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Error publishing service", details: error.message });
+  }
+}

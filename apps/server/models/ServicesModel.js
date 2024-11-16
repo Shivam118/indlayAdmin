@@ -1,53 +1,41 @@
+// models/Property.js
 const mongoose = require("mongoose");
 
-const ServicesSchema = new mongoose.Schema({
-  name: {
+const ServiceSchema = new mongoose.Schema({
+  title: {
     type: String,
     required: true,
+    maxlength: 100,
     trim: true,
   },
-  description: {
+  slug: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+  },
+  details: {
+    type: Map,
+    required: true,
+  },
+  postedDate: {
+    type: Date,
+    default: Date.now,
+  },
+  mainImage: {
     type: String,
     required: true,
   },
-  image: {
-    type: String,
-    required: false,
-  },
-  price: {
-    type: Number,
-    required: false,
-  },
-  generalInfo: {
-    listingType: {
+  images: [
+    {
       type: String,
-      enum: ["sale", "rent"],
       required: true,
     },
-    status: {
-      type: String,
-      enum: ["available", "sold", "rented"],
-      default: "available",
-    },
-    contact: {
-      name: { type: String, required: true },
-      phone: { type: String, required: true },
-      email: { type: String, required: true },
-    },
-    postedDate: {
-      type: Date,
-      default: Date.now,
-    },
-  },
-  listedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
+  ],
   isReadyToPublish: {
     type: Boolean,
     default: false,
   },
 });
 
-module.exports = mongoose.model("Service", ServicesSchema);
+module.exports = mongoose.model("Service", ServiceSchema);

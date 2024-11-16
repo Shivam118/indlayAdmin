@@ -42,8 +42,8 @@ function validateRegisterInput(data) {
   // Role Validation
   if (!data.role) {
     errors.role = "Role is required.";
-  } else if (data.role !== "user" && data.role !== "admin") {
-    errors.role = "Role must be either 'user' or 'admin'.";
+  } else if (data.role !== "employee" && data.role !== "admin") {
+    errors.role = "Role must be either 'Employee' or 'admin'.";
   }
 
   return {
@@ -118,130 +118,70 @@ const validateProperty = (data) => {
 
   // Validate description
   if (
-    !data.description ||
-    typeof data.description !== "string" ||
-    data.description.trim() === ""
+    !data.details.description ||
+    typeof data.details.description !== "string" ||
+    data.details.description.trim() === ""
   ) {
     errors.description =
       "Description is required and must be a non-empty string.";
   }
 
   // Validate price
-  if (typeof data.price !== "string" || data.price.trim() === "") {
-    errors.price = "Price is required and must be a positive number.";
-  }
-
-  // Validate propertyType
-  const validTypes = ["apartment", "house", "villa", "condo", "studio"];
-  if (!data.propertyType || !validTypes.includes(data.propertyType)) {
-    errors.propertyType = `Property type is required and must be one of: ${validTypes.join(
-      ", "
-    )}.`;
+  if (
+    typeof data.details.price !== "string" ||
+    data.details.price.trim() === ""
+  ) {
+    errors.price = "Price is required";
   }
 
   // Validate location
-  if (!data.location || typeof data.location !== "object") {
-    errors.location = "Location is required and must be an object.";
-  } else {
-    if (!data.location.address || typeof data.location.address !== "string") {
-      errors.location = "Address is required and must be a string.";
-    }
-    if (!data.location.city || typeof data.location.city !== "string") {
-      errors.city = "City is required and must be a string.";
-    }
-    if (!data.location.state || typeof data.location.state !== "string") {
-      errors.state = "State is required and must be a string.";
-    }
-    if (!data.location.country || typeof data.location.country !== "string") {
-      errors.country = "Country is required and must be a string.";
-    }
-    if (
-      !data.location.postalCode ||
-      typeof data.location.postalCode !== "string"
-    ) {
-      errors.postalCode = "Postal code is required and must be a string.";
-    }
-    if (
-      !data.location.coordinates ||
-      typeof data.location.coordinates !== "object" ||
-      typeof data.location.coordinates.lat !== "number" ||
-      typeof data.location.coordinates.lng !== "number"
-    ) {
-      errors.coordinates =
-        "Coordinates are required and must include valid latitude and longitude numbers.";
-    }
+  if (!data.details.address || typeof data.details.address !== "string") {
+    errors.address = "Address is required and must be a string.";
   }
-
-  // Validate size
-  if (typeof data.size !== "string" || data.size.trim() === "") {
-    errors.size = "Size is required and must be a positive number.";
+  if (!data.details.city || typeof data.details.city !== "string") {
+    errors.city = "City is required and must be a string.";
   }
-
-  // Validate bedrooms
-  if (typeof data.bedrooms !== "number" || data.bedrooms < 0) {
-    errors.bedrooms = "Bedrooms is required and must be a non-negative number.";
+  if (!data.details.state || typeof data.details.state !== "string") {
+    errors.state = "State is required and must be a string.";
   }
-
-  // Validate bathrooms
-  if (typeof data.bathrooms !== "number" || data.bathrooms < 0) {
-    errors.bathrooms =
-      "Bathrooms is required and must be a non-negative number.";
+  if (!data.details.country || typeof data.details.country !== "string") {
+    errors.country = "Country is required and must be a string.";
+  }
+  if (!data.details.postalCode || typeof data.details.postalCode !== "string") {
+    errors.postalCode = "Postal code is required and must be a string.";
+  }
+  if (
+    typeof data.details.lat !== "string" ||
+    typeof data.details.lng !== "string"
+  ) {
+    errors.lat =
+      "Coordinates are required and must include valid latitude and longitude numbers.";
+    errors.lng =
+      "Coordinates are required and must include valid latitude and longitude numbers.";
   }
 
   // Validate amenities
-  if (!Array.isArray(data.amenities)) {
+  if (!Array.isArray(data.details.amenities)) {
     errors.amenities = "Amenities must be an array of amenity IDs.";
   }
 
-  // Validate generalInfo
-  if (!data.generalInfo || typeof data.generalInfo !== "object") {
-    errors.generalInfo =
-      "General information is required and must be an object.";
-  } else {
-    const listingTypes = ["sale", "rent"];
-    const statuses = ["available", "sold", "rented"];
-
-    if (
-      !data.generalInfo.listingType ||
-      !listingTypes.includes(data.generalInfo.listingType)
-    ) {
-      errors.listingType = `Listing type must be one of: ${listingTypes.join(
-        ", "
-      )}.`;
-    }
-
-    if (
-      !data.generalInfo.status ||
-      !statuses.includes(data.generalInfo.status)
-    ) {
-      errors.status = `Status must be one of: ${statuses.join(", ")}.`;
-    }
-
-    if (
-      !data.generalInfo.contact ||
-      typeof data.generalInfo.contact !== "object"
-    ) {
-      errors.contact = "Contact information is required and must be an object.";
-    } else {
-      if (
-        !data.generalInfo.contact.name ||
-        typeof data.generalInfo.contact.name !== "string"
-      ) {
-        errors.contactName = "Contact name is required and must be a string.";
-      }
-      if (
-        !data.generalInfo.contact.phone ||
-        typeof data.generalInfo.contact.phone !== "string"
-      ) {
-        errors.contactPhone = "Contact phone is required and must be a string.";
-      }
-      if (
-        !data.generalInfo.contact.email ||
-        typeof data.generalInfo.contact.email !== "string"
-      ) {
-        errors.contactEmail = "Contact email is required and must be a string.";
-      }
-    }
+  if (
+    !data.details.contactName ||
+    typeof data.details.contactName !== "string"
+  ) {
+    errors.contactName = "Contact name is required and must be a string.";
+  }
+  if (
+    !data.details.contactPhone ||
+    typeof data.details.contactPhone !== "string"
+  ) {
+    errors.contactPhone = "Contact phone is required and must be a string.";
+  }
+  if (
+    !data.details.contactEmail ||
+    typeof data.details.contactEmail !== "string"
+  ) {
+    errors.contactEmail = "Contact email is required and must be a string.";
   }
 
   return { isValid: Object.keys(errors).length === 0, errors };

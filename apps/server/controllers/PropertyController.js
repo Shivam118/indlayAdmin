@@ -22,7 +22,7 @@ exports.createProperty = async (req, res) => {
       isReadyToPublish = user?.role === "admin",
     } = req.body;
 
-    const {amenities, ...rest} = details;
+    const { amenities, ...rest } = details;
     // Check if all provided amenities exist
     const amenityRecords = await Amenity.find({ _id: { $in: amenities } });
     if (amenityRecords.length !== amenities.length) {
@@ -55,8 +55,9 @@ exports.createProperty = async (req, res) => {
 // Get all properties
 exports.getAllProperties = async (req, res) => {
   try {
-    const properties = await Property.find({ isReadyToPublish: true })
-      .populate("amenities")
+    const properties = await Property.find({ isReadyToPublish: true }).populate(
+      "amenities"
+    );
     res.status(200).json(properties);
   } catch (error) {
     res
@@ -72,8 +73,9 @@ exports.getPropertyById = async (req, res) => {
     if (!isValid) {
       return res.status(400).json({ errors });
     }
-    const property = await Property.findOne({ slug: req.params.slug})
-      .populate("amenities")
+    const property = await Property.findOne({ slug: req.params.slug }).populate(
+      "amenities"
+    );
     if (!property) return res.status(404).json({ error: "Property not found" });
     res.status(200).json(property);
   } catch (error) {
@@ -101,7 +103,7 @@ exports.updateProperty = async (req, res) => {
       isReadyToPublish = user?.role === "admin",
     } = req.body;
 
-    const {amenities, ...rest} = details;
+    const { amenities, ...rest } = details;
 
     // Validate amenities if provided
     if (amenities) {
@@ -163,8 +165,9 @@ exports.getNonPublishedProperties = async (req, res) => {
 
 exports.publishProperty = async (req, res) => {
   try {
+    const { id } = req.body;
     const property = await Property.findByIdAndUpdate(
-      req.params.id,
+      id,
       { isReadyToPublish: true },
       { new: true }
     );

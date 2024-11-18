@@ -129,9 +129,8 @@ exports.getNonPublishedServices = async (req, res) => {
 };
 
 exports.publishService = async (req, res) => {
-  const { id } = req.params;
-
   try {
+    const { id } = req.body;
     const service = await Service.findByIdAndUpdate(
       id,
       { isReadyToPublish: true },
@@ -146,4 +145,4 @@ exports.publishService = async (req, res) => {
       .status(500)
       .json({ error: "Error publishing service", details: error.message });
   }
-}
+};
